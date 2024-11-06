@@ -1,0 +1,41 @@
+.custom-select{
+    position: relative;
+    display: inline-block;
+    min-width: 160px;
+}
+
+.select-selected{
+    background-color:var(--color-white);
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 1px solid var(--color-input-border);
+}
+
+.select-items{
+    position: absolute;
+    display: none;
+    color: var(--color-black);
+    background-color: var(--color-white);
+    width: calc(100% - 2px);
+    max-height: 164px;
+    overflow-y: auto;
+    border: 1px solid var(--color-input-border);
+    z-index: 1;
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.select-items div{
+    padding:8px 16px;
+    cursor: pointer;
+}
+
+.select-items div:hover{
+    background-color: var(--color-orange);
+    color: var(--color-white);
+}
+
+.select-items.show{
+    display: block;
+}

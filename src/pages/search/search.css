@@ -1,0 +1,43 @@
+
+.search-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+
+}
+
+.search-header{
+    display: flex;
+    flex-direction: column;
+}
+
+.search-h1{
+    color: var(--color-orange);
+    margin-bottom: 2.5rem;
+}
+
+.indicator-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.searchTerm{
+    color: var(--color-orange);
+}
+
+.no-result{
+    color: var(--color-warning);
+    font-weight: bold;
+}
+
+.indicator-txt-wrapper{
+    margin-top: .5rem;
+    padding-left: 2.5rem;
+    color: var(--color-secondary-green);
+    font-style: italic;
+}
+
+.indicator-txt-wrapper span{
+    font-weight: bold;
+}

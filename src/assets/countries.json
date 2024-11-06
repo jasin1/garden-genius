@@ -1,0 +1,246 @@
+[
+  {
+    "name": "Albania",
+    "zones": ["7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Andorra",
+    "zones": ["8b", "9a"]
+  },
+  {
+    "name": "Austria",
+    "zones": ["6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Belarus",
+    "zones": ["4a", "4b", "5a", "5b", "6a", "6b", "7a"]
+  },
+  {
+    "name": "Belgium",
+    "zones": ["8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Bosnia",
+    "zones": ["7a", "7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Bulgaria",
+    "zones": ["6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Croatia",
+    "zones": ["7a", "7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Cyprus",
+    "zones": ["9a", "9b", "10a", "10b"]
+  },
+  {
+    "name": "Czech Republic",
+    "zones": ["5a", "5b", "6a", "6b", "7a", "7b", "8a", "8b"]
+  },
+  {
+    "name": "Denmark",
+    "zones": ["7a", "7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Estonia",
+    "zones": ["4a", "4b", "5a", "5b", "6a", "6b", "7a"]
+  },
+  {
+    "name": "Finland",
+    "zones": ["3a", "3b", "4a", "4b", "5a", "5b", "6a"]
+  },
+  {
+    "name": "France",
+    "zones": ["6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b", "10a", "10b"]
+  },
+  {
+    "name": "Germany",
+    "zones": ["6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Greece",
+    "zones": ["8a", "8b", "9a", "9b", "10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Hungary",
+    "zones": ["6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Iceland",
+    "zones": ["7a", "7b"]
+  },
+  {
+    "name": "Ireland",
+    "zones": ["8a", "8b", "9a", "9b", "10a", "10b"]
+  },
+  {
+    "name": "Italy",
+    "zones": [
+      "6a",
+      "6b",
+      "7a",
+      "7b",
+      "8a",
+      "8b",
+      "9a",
+      "9b",
+      "10a",
+      "10b",
+      "11a",
+      "11b"
+    ]
+  },
+  {
+    "name": "Kosovo",
+    "zones": ["7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Latvia",
+    "zones": ["4a", "4b", "5a", "5b", "6a", "6b", "7a"]
+  },
+  {
+    "name": "Liechtenstein",
+    "zones": ["6a", "6b", "7a", "7b", "8a", "8b"]
+  },
+  {
+    "name": "Lithuania",
+    "zones": ["4a", "4b", "5a", "5b", "6a", "6b", "7a"]
+  },
+  {
+    "name": "Luxembourg",
+    "zones": ["7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Malta",
+    "zones": ["10b", "11a", "11b"]
+  },
+  {
+    "name": "Moldova",
+    "zones": ["6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Monaco",
+    "zones": ["9a", "9b", "10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Montenegro",
+    "zones": ["7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Netherlands",
+    "zones": ["7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "North Macedonia",
+    "zones": ["7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Norway",
+    "zones": ["3a", "3b", "4a", "4b", "5a", "5b", "6a", "6b"]
+  },
+  {
+    "name": "Poland",
+    "zones": ["4a", "4b", "5a", "5b", "6a", "6b", "7a", "7b"]
+  },
+  {
+    "name": "Portugal",
+    "zones": ["9a", "9b", "10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Romania",
+    "zones": ["6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Russia",
+    "zones": [
+      "1a",
+      "1b",
+      "2a",
+      "2b",
+      "3a",
+      "3b",
+      "4a",
+      "4b",
+      "5a",
+      "5b",
+      "6a",
+      "6b",
+      "7a",
+      "7b",
+      "8a",
+      "8b",
+      "9a",
+      "9b"
+    ]
+  },
+  {
+    "name": "San Marino",
+    "zones": ["9a", "9b", "10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Serbia",
+    "zones": ["7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Slovakia",
+    "zones": ["5a", "5b", "6a", "6b", "7a", "7b", "8a", "8b"]
+  },
+  {
+    "name": "Slovenia",
+    "zones": ["6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b"]
+  },
+  {
+    "name": "Spain",
+    "zones": ["8a", "8b", "9a", "9b", "10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Sweden",
+    "zones": ["3a", "3b", "4a", "4b", "5a", "5b", "6a", "6b"]
+  },
+  {
+    "name": "Switzerland",
+    "zones": ["6a", "6b", "7a", "7b", "8a", "8b"]
+  },
+  {
+    "name": "Ukraine",
+    "zones": ["4a", "4b", "5a", "5b", "6a", "6b", "7a", "7b"]
+  },
+  {
+    "name": "United Kingdom",
+    "zones": ["8a", "8b", "9a", "9b", "10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Vatican City",
+    "zones": ["9a", "9b", "10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Algeria",
+    "zones": ["8a", "8b", "9a", "9b", "10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Egypt",
+    "zones": ["10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Libya",
+    "zones": ["10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Morocco",
+    "zones": ["8a", "8b", "9a", "9b", "10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Sudan",
+    "zones": ["10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Tunisia",
+    "zones": ["8a", "8b", "9a", "9b", "10a", "10b", "11a", "11b"]
+  },
+  {
+    "name": "Western Sahara",
+    "zones": ["10a", "10b", "11a", "11b"]
+  }
+]

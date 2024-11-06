@@ -1,0 +1,26 @@
+
+.avatar-container{
+    position: relative;
+    width: 100%;
+}
+
+.avatar-wrapper{
+    width: 200px;
+    position: absolute;
+    left: 10%;
+    top: -60%;
+}
+
+.block-top{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3.5rem;
+}
+
+.plant-header{
+    margin-bottom: 1.5rem;
+}
+
+.coloredTxt{
+    color: var(--color-secondary-green);
+}

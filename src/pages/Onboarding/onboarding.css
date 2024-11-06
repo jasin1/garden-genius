@@ -1,0 +1,69 @@
+.main-onboarding{
+    background-image: url('../../assets/plant-bg.png');
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.onboarding-wrapper{
+    max-width: 690px;
+}
+
+.onboarding-header{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+
+.logo-wrapper{
+    width: 320px;
+    margin-bottom: 1.5rem;
+}
+
+.onboarding-header p{
+    font-size: 1.5rem;
+    color: var(--color-secondary-green);
+}
+
+.onboarding-content p{
+    margin-bottom: 72px;
+}
+
+.button-wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+@media screen and (max-width: 1200px){
+    .main-onboarding{
+        background-image: none;
+    }
+
+}
+
+@media screen and (max-width: 768px){
+
+    .main-onboarding{
+        padding: 2.5rem;
+        height: auto;
+    }
+
+    .logo-wrapper{
+        margin-bottom: 1.5rem;
+    }
+
+    .onboarding-header p{
+        font-size: 1.2rem;
+    }
+
+    .onboarding-content p{
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+}

@@ -1,0 +1,12 @@
+footer{
+    background: var(--color-main-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.footer-logo-wrapper{
+    max-width: 220px;
+}
+
