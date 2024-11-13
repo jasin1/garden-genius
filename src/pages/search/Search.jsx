@@ -77,7 +77,7 @@ function Search() {
                 <Navigation/>
                 <section className="search-container">
                     <header className="search-header">
-                        <h1 className="search-h1">Unleash the superpowers of plants</h1>
+                        <h1 className="search-h1">Unleash SupaBase the superpowers of plants</h1>
                         <SearchBar
                             onSearch={handleSearch}
                             placeholder="Search for plants..."
