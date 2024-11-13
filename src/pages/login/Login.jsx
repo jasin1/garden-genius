@@ -3,7 +3,7 @@ import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../../context/AuthContext.jsx";
 import {useContext, useState} from "react";
-import axios from "axios";
+// import axios from "axios";
 import Button from '../../components/Button/Button.jsx';
 import Header from "../../components/Headers/Header.jsx";
 import Notification from "../../components/Notification/Notification.jsx";
@@ -22,20 +22,17 @@ function Login() {
         console.log('Login nu!', register)
 
         try {
-            const response = await axios.post('https://api.datavortex.nl/gardengenius/users/authenticate', {
-                "username": data.username,
-                "password": data.password
+            // Call login from AuthContext which handles Supabase login internally
+            const response = await login(data.email, data.password);
 
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-
-        login(response.data.jwt);
+            if (response?.error) {
+                setError(response.error.message);  // Show error if any
+            } else {
+                navigate('/search');  // Redirect to homepage after successful login
+            }
         } catch (error) {
-            console.error('login fout: ', error);
-            setError('Login error');
+            console.error('Login error: ', error);
+            setError('Login failed: ' + error.message);
         }
     }
 
