@@ -1,54 +1,82 @@
-import {createContext, useState, useContext} from "react";
-import {AuthContext} from "./AuthContext.jsx";
+// PlantContext.js
+import { createContext, useContext, useState, useEffect } from 'react';
+import { AuthContext } from './AuthContext';
+import { supabase } from "../config/supabaseClient.js";
 
-export const PlantContext = createContext({});
+const PlantContext = createContext({});
 
-function PlantContextProvider({children}) {
-    const [LikedPlantIds, setLikedPlantIds] = useState([]);
-    const {updateUserInfo} = useContext(AuthContext);
+const PlantProvider = ({ children }) => {
+  const { user } = useContext(AuthContext);
+  const [userPlants, setUserPlants] = useState([]);
 
+  useEffect(() => {
+    const fetchUserPlants = async () => {
+      if (user) {
+        const { data, error } = await supabase
+          .from('user_plants')
+          .select('plant_id')
+          .eq('user_id', user.id);
 
-    const likePlant = (plantId) => {
-        setLikedPlantIds((prevLikedPlantIds) => {
-            const updatedLikedPlantIds = [...prevLikedPlantIds, plantId];
-            updateUserInfo(updatedLikedPlantIds);
-            return updatedLikedPlantIds;
-        });
-
-    };
-
-    const unlikedPlant = async (plantId) => {
-        try {
-
-            setLikedPlantIds((prevLikedPlantIds) => {
-                const updatedLikedPlantIds = prevLikedPlantIds.filter((id) => id !== plantId);
-                updateUserInfo(updatedLikedPlantIds);
-
-                return updatedLikedPlantIds;
-            });
-
-            await updateUserInfo();
-
-
-        } catch (error) {
-            console.error('Error updating user info', error);
+        if (error) {
+          console.error('Error fetching user plants:', error);
+        } else {
+          // console.log('fetched user plants: ',data)
+          setUserPlants(data.map((item) => item.plant_id));
         }
-
+      }
     };
+    if(user){
+      fetchUserPlants();
+      
+    }
+
+  }, [user]);
+
+  const savePlant = async (plantId) => {
+
+    if(userPlants.includes(plantId)){
+      console.warn('Plant is already saved');
+      return;
+    }
 
 
-    const data = {
-        likedPlantIds: LikedPlantIds,
-        likePlant: likePlant,
-        unlikedPlant: unlikedPlant,
-    };
+    setUserPlants((prev) => [...prev, plantId]); // Optimistic update
+    const { error } = await supabase
+      .from('user_plants')
+      .insert([{ user_id: user.id, plant_id: plantId }]);
 
+    if (error) {
+      console.error('Error saving plant:', error);
+      setUserPlants((prev) => prev.filter((id) => id !== plantId)); // Rollback
+    }
+  };
 
-    return (
-        <PlantContext.Provider value={data}>
-            {children}
-        </PlantContext.Provider>
-    )
-}
+  const unsavePlant = async (plantId) => {
+    setUserPlants((prev) => prev.filter((id) => id !== plantId)); // Optimistic update
+    const { error } = await supabase
+      .from('user_plants')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('plant_id', plantId);
 
-export default PlantContextProvider;
+    if (error) {
+      console.error('Error removing plant:', error);
+      setUserPlants((prev) => [...prev, plantId]); // Rollback
+    }
+  };
+
+  const plantData ={
+    userPlants,
+    savePlant,
+    unsavePlant,
+  };
+
+  return (
+    <PlantContext.Provider value={{ plantData }}>
+      {children}
+    </PlantContext.Provider>
+  );
+};
+
+export { PlantContext, PlantProvider };
+

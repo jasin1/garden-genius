@@ -7,24 +7,33 @@ export const AuthContext = createContext({});
 function AuthContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState("pending");
+  // const [userPlants, setUserPlants] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // console.log("supabase auth",supabase.auth); 
     // Get the initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
-      setStatus('done');
+      setStatus("done");
 
       if (session && window.location.pathname === "/login") {
         navigate("/search"); // Redirect logged-in users from the login page to /search
       }
+
+
     });
 
     // Set up listener for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
 
-      if (session) {
+      if (session?.user) {
+
+        // fetchUserPlants(session.user.id);
+
         // If the user is logged in, and on the login page, redirect to /search
         if (window.location.pathname === "/login") {
           navigate("/search");
@@ -43,6 +52,8 @@ function AuthContextProvider({ children }) {
       subscription.unsubscribe();
     };
   }, [navigate]);
+
+  
 
   const signUp = async (email, password) => {
     const { user, error } = await supabase.auth.signUp({
@@ -90,7 +101,7 @@ function AuthContextProvider({ children }) {
 
   return (
     <AuthContext.Provider value={AuthData}>
-      {status === 'done' ? children : <p>Loading...</p>}
+      {status === "done" ? children : <p>Loading...</p>}
     </AuthContext.Provider>
   );
 }
