@@ -1,6 +1,6 @@
 import "./PlantCard.css";
 import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import placeholderImage from "../../assets/placeholder-plant.jpg";
 import LikeButton from "../LikeButton/LikeButton.jsx";
 import { PlantContext } from "../../context/PlantContext.jsx";
@@ -8,23 +8,16 @@ import { PlantContext } from "../../context/PlantContext.jsx";
 function PlantCard({ plantName, subName, image, id }) {
   const { plantData } = useContext(PlantContext);
   const { userPlants, savePlant, unsavePlant } = plantData;
-  const [isLiked, setIsLiked] = useState(false);
-  // const isLiked = userPlants.includes(id);
-
-  useEffect(() => {
-    setIsLiked(userPlants.includes(id));
-    console.log("PlantProvider userPlants:", userPlants);
-  }, [userPlants, id]);
+  // const [isLiked, setIsLiked] = useState(false);
+  const isLiked = userPlants.includes(String(id)); // Ensure the ID is compared as a string
 
   const handleLikeClick = async () => {
-    if (!isLiked) {
-      await savePlant(id); // Save the plant
+    if (isLiked) {
+      await unsavePlant(id); // Remove the plant
     } else {
-      await unsavePlant(id); // Unsave the plant
+      await savePlant(id); // Add the plant
     }
-    setIsLiked(!isLiked); // Immediately reflect the change
   };
-
   return (
     <div className="card-wrapper">
       <div className="plant-save">
