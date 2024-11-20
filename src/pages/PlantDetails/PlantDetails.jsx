@@ -4,7 +4,6 @@ import {useParams, useNavigate} from "react-router-dom";
 import {useContext, useEffect, useState} from "react";
 import {PlantContext} from '../../context/PlantContext.jsx';
 import axios from "axios";
-
 import Footer from "../../components/Footer/Footer.jsx";
 import WateringIcon from "../../assets/icon-watering.svg";
 import SunIcon from "../../assets/icon-sun.svg";
@@ -17,19 +16,24 @@ import Notification from "../../components/Notification/Notification.jsx";
 
 
 function PlantDetails() {
-    const {likedPlantIds, likePlant, unlikedPlant} = useContext(PlantContext);
+    const { plantData: { userPlants, savePlant, unsavePlant, loadingUserPlants } } = useContext(PlantContext);
+
     const {id} = useParams();
     const [plant, setPlant] = useState();
     const [error, setError] = useState(null);
     const numericId = parseInt(id, 10);
-    const isLiked = likedPlantIds.includes(numericId);
-    const [buttonText, setButtonText] = useState(isLiked ? "Remove from collection" : "Add to collection");
+    const isLiked = userPlants.includes(String(numericId));
+    // const [buttonText, setButtonText] = useState(isLiked ? "Remove from collection" : "Add to collection");
     const navigate = useNavigate();
 
 
-    const goBack = ()=>{
-        navigate(-1);
-    }
+    const goBack = () => {
+        if (window.history.length > 1) {
+            navigate(-1);
+        } else {
+            navigate('/');
+        }
+    };
 
     useEffect(() => {
         async function fetchDetailData() {
@@ -48,16 +52,22 @@ function PlantDetails() {
 
     const handleButtonClick = () => {
         if (isLiked) {
-            unlikedPlant(numericId);
-            setButtonText("Add to collection");
+            unsavePlant(numericId);
         } else {
-            likePlant(numericId);
-            setButtonText("Remove from collection");
+            savePlant(numericId);
         }
-    }
+    };
+    
 
     const handleCloseNotification = () =>{
         setError(null);
+    }
+
+    if (loadingUserPlants) {
+        return <p>Loading plant details...</p>;
+    }
+    if (error) {
+        return <Notification message={error} onClose={handleCloseNotification} />;
     }
 
     return (
@@ -74,7 +84,9 @@ function PlantDetails() {
                                     Back
                                 </Button>
 
-                                <Button type="button" variant={isLiked ? 'grey' : 'orange'} onClick={handleButtonClick}>{buttonText}</Button>
+                                <Button type="button" variant={isLiked ? 'grey' : 'orange'} onClick={handleButtonClick}>
+    {isLiked ? "Remove from collection" : "Add to collection"}
+</Button>
                             </div>
                             {plant && (
                                 <div className="plant-detail-container">
