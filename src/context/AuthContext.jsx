@@ -11,7 +11,7 @@ function AuthContextProvider({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // console.log("supabase auth",supabase.auth); 
+    // console.log("supabase auth",supabase.auth);
     // Get the initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
@@ -20,8 +20,6 @@ function AuthContextProvider({ children }) {
       if (session && window.location.pathname === "/login") {
         navigate("/search"); // Redirect logged-in users from the login page to /search
       }
-
-
     });
 
     // Set up listener for auth state changes
@@ -31,18 +29,14 @@ function AuthContextProvider({ children }) {
       setUser(session?.user || null);
 
       if (session?.user) {
-
-        // fetchUserPlants(session.user.id);
-
-        // If the user is logged in, and on the login page, redirect to /search
         if (window.location.pathname === "/login") {
           navigate("/search");
         }
       } else {
-        // If no session (user is logged out), allow them to access the login page
-        if (window.location.pathname !== "/login") {
-          // Optionally redirect to homepage or wherever
-          navigate("/");
+        const publicRoutes = ["/login", "/register"];
+
+        if (!publicRoutes.includes(window.location.pathname)) {
+          navigate("/search");
         }
       }
     });
@@ -53,8 +47,6 @@ function AuthContextProvider({ children }) {
     };
   }, [navigate]);
 
-  
-
   const signUp = async (email, password) => {
     const { user, error } = await supabase.auth.signUp({
       email,
@@ -62,7 +54,7 @@ function AuthContextProvider({ children }) {
     });
 
     if (error) {
-      console.error("sign-up error:", error.message);
+      console.error("sign-up error:", error);
       return;
     }
 
@@ -78,7 +70,14 @@ function AuthContextProvider({ children }) {
 
     if (error) {
       console.error("Login error:", error.message);
-      return;
+      console.log("Supabase error:", error);
+      console.error("Login error:", error.message);
+
+      // Check if error message corresponds to "user not found" or "invalid credentials"
+      if (error.message.includes("invalid login credentials")) {
+        return { error: "User not found. Please register." };
+      }
+      return { error: error.message };
     }
 
     setUser(user);

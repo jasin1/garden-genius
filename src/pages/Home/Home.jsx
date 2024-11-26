@@ -9,7 +9,7 @@ import Notification from "../../components/Notification/Notification.jsx";
 import { useContext, useState } from "react";
 
 function Home() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const { signUp } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
@@ -83,8 +83,14 @@ function Home() {
                       type="email"
                       id="email-field"
                       placeholder="Enter your email"
-                      {...register("email")}
+                      {...register("email", {
+                        required: "Email is required",
+                        pattern: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/i,
+                      })}
                     />
+                    {errors.email && (
+                      <span className="error-text">{errors.email.message}</span>
+                    )}
                   </label>
                   <label htmlFor="password-field">
                     password
@@ -92,8 +98,15 @@ function Home() {
                       type="password"
                       id="password-field"
                       placeholder="Enter your password"
-                      {...register("password")}
+                      {...register("password", {
+                        required: "Password is required",
+                      })}
                     />
+                    {errors.password && (
+                      <span className="error-text">
+                        {errors.password.message}
+                      </span>
+                    )}
                   </label>
                   <div className="btn-wrapper">
                     <Button type="submit" variant="alt">

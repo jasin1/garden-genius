@@ -4,14 +4,19 @@ import { useContext } from "react";
 import placeholderImage from "../../assets/placeholder-plant.jpg";
 import LikeButton from "../LikeButton/LikeButton.jsx";
 import { PlantContext } from "../../context/PlantContext.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
+
 
 function PlantCard({ plantName, subName, image, id }) {
   const { plantData } = useContext(PlantContext);
   const { userPlants, savePlant, unsavePlant } = plantData;
-  // const [isLiked, setIsLiked] = useState(false);
+  const { user } = useContext(AuthContext);
   const isLiked = userPlants.includes(String(id)); // Ensure the ID is compared as a string
 
   const handleLikeClick = async () => {
+    if(!user){
+      console.log('user not logged in');
+    }
     if (isLiked) {
       await unsavePlant(id); // Remove the plant
     } else {

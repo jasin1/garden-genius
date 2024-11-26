@@ -17,13 +17,14 @@ function App() {
     return (
         <>
             <Routes>
-                <Route path="/" element={<Home/>}/>
+                <Route path="/" element={<Search/>}/>
                 <Route path="/search" element={<Search/>}/>
                 <Route path="/saved" element={<Saved/>}/>
                 <Route path="/profile" element={<Profile/>}/>
                 <Route path="/onboarding" element={<Onboarding/>}/>
                 <Route path="/plantdetail/:id" element={<PlantDetail/>}/>
                 <Route path="/login" element={<Login/>}/>
+                <Route path="/register" element={<Home/>}/>
             </Routes>
 
 

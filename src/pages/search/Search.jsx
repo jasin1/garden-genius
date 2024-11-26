@@ -11,6 +11,7 @@ import Dropdown from "../../components/Dropdown/Dropdown.jsx";
 import countries from "../../assets/countries.json";
 import Header from "../../components/Headers/Header.jsx";
 import Notification from "../../components/Notification/Notification.jsx";
+// import Modal from "../../components/Modal/Modal.jsx";
 
 function Search() {
   const [data, setData] = useState([]);
@@ -162,6 +163,7 @@ function Search() {
         {error && (
           <Notification message={error} onClose={handleCloseNotification} />
         )}
+
       </article>
     </main>
   );

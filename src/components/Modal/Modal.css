@@ -1,0 +1,7 @@
+.modal-wrapper{
+  max-width: 480px;
+  width: 100%;
+  padding: 2rem;
+  background: var(--color-white);
+  border-radius: 1.5rem;;
+}
