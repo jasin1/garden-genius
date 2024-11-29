@@ -7,7 +7,7 @@ import { PlantContext } from "../../context/PlantContext.jsx";
 import { AuthContext } from "../../context/AuthContext.jsx";
 
 
-function PlantCard({ plantName, subName, image, id }) {
+function PlantCard({ plantName, subName, image, id, triggerModal }) {
   const { plantData } = useContext(PlantContext);
   const { userPlants, savePlant, unsavePlant } = plantData;
   const { user } = useContext(AuthContext);
@@ -16,6 +16,7 @@ function PlantCard({ plantName, subName, image, id }) {
   const handleLikeClick = async () => {
     if(!user){
       console.log('user not logged in');
+      return;
     }
     if (isLiked) {
       await unsavePlant(id); // Remove the plant
@@ -23,12 +24,21 @@ function PlantCard({ plantName, subName, image, id }) {
       await savePlant(id); // Add the plant
     }
   };
+
+  const handleCardClick = (e) =>{
+    if(!user){
+      e.preventDefault();
+      triggerModal();
+    }
+  }
+
+
   return (
     <div className="card-wrapper">
       <div className="plant-save">
         <LikeButton isLiked={isLiked} onClick={handleLikeClick} />
       </div>
-      <Link to={`/plantdetail/${id}`} className="card-link">
+      <Link to={`/plantdetail/${id}`} className="card-link" onClick={handleCardClick}>
         <div className="card" key={id}>
           <div className="card-img-wrapper">
             {image ? (

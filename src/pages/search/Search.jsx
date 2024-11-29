@@ -2,6 +2,7 @@ import "./search.css";
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import { PlantContext } from "../../context/PlantContext.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
 
 import Navigation from "../../components/Navigation/Navigation.jsx";
 import PlantCard from "../../components/PlantCard/PlantCard.jsx";
@@ -11,7 +12,8 @@ import Dropdown from "../../components/Dropdown/Dropdown.jsx";
 import countries from "../../assets/countries.json";
 import Header from "../../components/Headers/Header.jsx";
 import Notification from "../../components/Notification/Notification.jsx";
-// import Modal from "../../components/Modal/Modal.jsx";
+import placeholder from "../../assets/placeholder-plant.jpg";
+import Modal from "../../components/Modal/Modal.jsx";
 
 function Search() {
   const [data, setData] = useState([]);
@@ -21,7 +23,10 @@ function Search() {
   const [InputSearch, setInputSearch] = useState("");
   const [noResults, setNoResults] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  const [loadingPlants, setLoadingPlants] = useState(false); // For plant data loading
+  const [loadingPlants, setLoadingPlants] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { user } = useContext(AuthContext);
 
   // Access the plant data and functions from context
   const { plantData } = useContext(PlantContext);
@@ -88,6 +93,18 @@ function Search() {
     setError(null);
   };
 
+  const triggerModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    console.log("AuthContext user state changed:", user);
+  }, [user]);
+
   return (
     <main>
       <article>
@@ -108,6 +125,11 @@ function Search() {
         </section>
 
         <section className="suggested">
+          {user ? (
+            <div>Welcome back, {user.email}!</div>
+          ) : (
+            <div>Please log in to see your saved plants.</div>
+          )}
           <div className="container">
             <div className="indicator-header">
               <Header Tag="h2" className={noResults ? "no-result" : ""}>
@@ -142,16 +164,14 @@ function Search() {
                         id={plant.id}
                         plantName={plant.common_name}
                         subName={plant.scientific_name.join(", ")}
-                        image={
-                          plant.default_image?.small_url ||
-                          "fallback_image_url"
-                        }
+                        image={plant.default_image?.small_url || placeholder}
                         isLiked={userPlants.includes(String(plant.id))} // Check if plant is liked
                         onToggleLike={() =>
                           userPlants.includes(String(plant.id))
                             ? unsavePlant(plant.id)
                             : savePlant(plant.id)
                         } // Toggle save/unsave
+                        triggerModal={triggerModal}
                       />
                     ),
                 )}
@@ -164,6 +184,7 @@ function Search() {
           <Notification message={error} onClose={handleCloseNotification} />
         )}
 
+        {isModalOpen && <Modal onClose={handleCloseModal} />}
       </article>
     </main>
   );

@@ -1,33 +1,31 @@
 import "./Modal.css";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import { useContext, useState } from "react";
 import Header from "../../components/Headers/Header.jsx";
 import Button from "../../components/Button/Button.jsx";
 
-function Modal() {
+function Modal({ onClose }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [error, setError] = useState(null);
 
   async function handleFormSubmit(data) {
-    // console.log('Login nu!', register)
-
     try {
       // Call login from AuthContext which handles Supabase login internally
       const response = await login(data.email, data.password);
-      console.log("Error received from AuthContext:", response?.error);
-
+      console.log("Login Response:", response);
       if (response?.error) {
-        setError(response.error); // Show error if any
+        setError(response.error.message || "login failed"); // Show error if any
       } else {
-        navigate("/search"); // Redirect to homepage after successful login
+        console.log("Login successful:", response);
+        onClose(); // Redirect to homepage after successful login
       }
     } catch (error) {
       console.error("Login error: ", error);
@@ -36,12 +34,17 @@ function Modal() {
   }
 
   function handleNavigate() {
-    navigate("/register");
+    window.location.href = "/register";
   }
 
   return (
     <div className="main-overlay">
       <div className="modal-wrapper">
+        <div className="modal-btn-wrapper">
+          <button className="modal-close" onClick={onClose}>
+            &times;
+          </button>
+        </div>
         <Header className={"intro-welcome-txt"} Tag={"h1"}>
           Login Please
         </Header>

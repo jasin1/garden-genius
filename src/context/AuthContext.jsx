@@ -63,15 +63,15 @@ function AuthContextProvider({ children }) {
   };
 
   const login = async (email, password) => {
-    const { user, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
       console.error("Login error:", error.message);
-      console.log("Supabase error:", error);
-      console.error("Login error:", error.message);
+      // console.log("Supabase error:", error);
+      // console.error("Login error:", error.message);
 
       // Check if error message corresponds to "user not found" or "invalid credentials"
       if (error.message.includes("invalid login credentials")) {
@@ -80,8 +80,9 @@ function AuthContextProvider({ children }) {
       return { error: error.message };
     }
 
-    setUser(user);
-    navigate("/search");
+    setUser(data.user);
+    // navigate("/search");
+    return{user: data.user}
   };
 
   const logout = async () => {
