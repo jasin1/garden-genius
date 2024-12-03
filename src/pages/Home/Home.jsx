@@ -74,7 +74,7 @@ function Home() {
                       type="text"
                       id="name-field"
                       placeholder="Enter your name"
-                      {...register("username")}
+                      {...register("username", { required: "Username is required" } )}
                     />
                   </label>
                   <label htmlFor="email-field">

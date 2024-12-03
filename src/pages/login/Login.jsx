@@ -76,7 +76,7 @@ function Login() {
             <div className="form-wrapper">
               <form onSubmit={handleSubmit(handleFormSubmit)}>
                 <div className="form-container">
-                  <label htmlFor="name-filed">
+                  {/* <label htmlFor="name-filed">
                     Name
                     <input
                       type="text"
@@ -84,7 +84,7 @@ function Login() {
                       placeholder="Enter your name"
                       {...register("username")}
                     />
-                  </label>
+                  </label> */}
                   <label htmlFor="email-filed">
                     Email
                     <input

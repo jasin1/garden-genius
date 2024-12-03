@@ -125,11 +125,11 @@ function Search() {
         </section>
 
         <section className="suggested">
-          {user ? (
-            <div>Welcome back, {user.email}!</div>
+          {/* {user ? (
+            <div>Welcome back, {user.user_metadata.display_name}!</div>
           ) : (
             <div>Please log in to see your saved plants.</div>
-          )}
+          )} */}
           <div className="container">
             <div className="indicator-header">
               <Header Tag="h2" className={noResults ? "no-result" : ""}>

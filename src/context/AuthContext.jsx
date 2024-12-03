@@ -47,10 +47,15 @@ function AuthContextProvider({ children }) {
     };
   }, [navigate]);
 
-  const signUp = async (email, password) => {
+  const signUp = async (email, password, username) => {
     const { user, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          display_name: username,
+        },
+      },
     });
 
     if (error) {
@@ -70,19 +75,17 @@ function AuthContextProvider({ children }) {
 
     if (error) {
       console.error("Login error:", error.message);
-      // console.log("Supabase error:", error);
-      // console.error("Login error:", error.message);
 
-      // Check if error message corresponds to "user not found" or "invalid credentials"
       if (error.message.includes("invalid login credentials")) {
         return { error: "User not found. Please register." };
       }
       return { error: error.message };
     }
+    
 
     setUser(data.user);
     // navigate("/search");
-    return{user: data.user}
+    return { user: data.user };
   };
 
   const logout = async () => {
