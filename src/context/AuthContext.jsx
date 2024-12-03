@@ -64,7 +64,8 @@ function AuthContextProvider({ children }) {
     }
 
     setUser(user);
-    navigate("/search");
+    // navigate("/search");
+    console.log("User signed up successfully:", user);
   };
 
   const login = async (email, password) => {

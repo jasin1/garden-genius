@@ -41,3 +41,17 @@
 .indicator-txt-wrapper span{
     font-weight: bold;
 }
+
+.welcome-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcome-message{
+    font-family: "Inria Serif", serif;
+    font-weight: bold;
+    color: var(--color-orange);
+    font-size: 1.5rem;
+
+}

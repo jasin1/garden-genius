@@ -9,24 +9,34 @@ import Notification from "../../components/Notification/Notification.jsx";
 import { useContext, useState } from "react";
 
 function Home() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const { signUp } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const [SignUpStatus, setSignUpStatus] = useState(false);
 
   async function handleFormSubmit(data) {
     try {
       const { email, password, username } = data;
       const response = await signUp(email, password, username);
 
+      if (!response) {
+        throw new Error("No response from the signup function");
+      }
+
       if (response.error) {
         setError(response.error.message); // Show error if any
       } else {
-        navigate("/login"); // Redirect to login page after successful signup
+        setSignUpStatus(true); // Redirect to login page after successful signup
+        console.log("Signup successful! Verification email sent.");
       }
     } catch (error) {
-      console.error("Registratiefout: ", error);
-      setError("Registratiefout");
+      console.error("Registratiefout: ", error.message);
+      setError(error.message || "An unexpected error occurred.");
     }
   }
 
@@ -61,72 +71,80 @@ function Home() {
               <h1 className="intro-welcome-txt">Sign up!</h1>
 
               <p>
-                Embark on your green journey with! Sign up today and discover a
-                world of botanical beauty.
+                {SignUpStatus
+                  ? "A verification email has been sent to your email address. Please check your inbox and confirm your account to proceed."
+                  : "Embark on your green journey with us! Sign up today and discover a world of botanical beauty."}
               </p>
             </div>
-            <div className="form-wrapper">
-              <form onSubmit={handleSubmit(handleFormSubmit)}>
-                <div className="form-container">
-                  <label htmlFor="name-filed">
-                    Name
-                    <input
-                      type="text"
-                      id="name-field"
-                      placeholder="Enter your name"
-                      {...register("username", { required: "Username is required" } )}
-                    />
-                  </label>
-                  <label htmlFor="email-field">
-                    Email
-                    <input
-                      type="email"
-                      id="email-field"
-                      placeholder="Enter your email"
-                      {...register("email", {
-                        required: "Email is required",
-                        pattern: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/i,
-                      })}
-                    />
-                    {errors.email && (
-                      <span className="error-text">{errors.email.message}</span>
-                    )}
-                  </label>
-                  <label htmlFor="password-field">
-                    password
-                    <input
-                      type="password"
-                      id="password-field"
-                      placeholder="Enter your password"
-                      {...register("password", {
-                        required: "Password is required",
-                      })}
-                    />
-                    {errors.password && (
-                      <span className="error-text">
-                        {errors.password.message}
-                      </span>
-                    )}
-                  </label>
-                  <div className="btn-wrapper">
-                    <Button type="submit" variant="alt">
-                      Sign up Now
-                    </Button>
-                  </div>
-                  <div className="register-wrapper">
-                    <p>Already have an account? </p>
 
-                    <Button
-                      type="button"
-                      variant="orange"
-                      onClick={handleNavigate}
-                    >    
-                      Login
-                    </Button>
+            {!SignUpStatus && (
+              <div className="form-wrapper">
+                <form onSubmit={handleSubmit(handleFormSubmit)}>
+                  <div className="form-container">
+                    <label htmlFor="name-filed">
+                      Name
+                      <input
+                        type="text"
+                        id="name-field"
+                        placeholder="Enter your name"
+                        {...register("username", {
+                          required: "Username is required",
+                        })}
+                      />
+                    </label>
+                    <label htmlFor="email-field">
+                      Email
+                      <input
+                        type="email"
+                        id="email-field"
+                        placeholder="Enter your email"
+                        {...register("email", {
+                          required: "Email is required",
+                          pattern: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/i,
+                        })}
+                      />
+                      {errors.email && (
+                        <span className="error-text">
+                          {errors.email.message}
+                        </span>
+                      )}
+                    </label>
+                    <label htmlFor="password-field">
+                      password
+                      <input
+                        type="password"
+                        id="password-field"
+                        placeholder="Enter your password"
+                        {...register("password", {
+                          required: "Password is required",
+                        })}
+                      />
+                      {errors.password && (
+                        <span className="error-text">
+                          {errors.password.message}
+                        </span>
+                      )}
+                    </label>
+                    <div className="btn-wrapper">
+                      <Button type="submit" variant="alt">
+                        Sign up Now
+                      </Button>
+                    </div>
+                    <div className="register-wrapper">
+                      <p>Already have an account? </p>
+
+                      <Button
+                        type="button"
+                        variant="orange"
+                        onClick={handleNavigate}
+                      >
+                        Login
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </form>
-            </div>
+                </form>
+              </div>
+            )}
           </div>
         </div>
         {error && (

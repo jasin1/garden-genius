@@ -111,6 +111,11 @@ function Search() {
         <Navigation />
         <section className="search-container">
           <header className="search-header">
+            {user && (
+              <div className="welcome-wrapper">
+                <p className="welcome-message">Welcome {user.user_metadata.display_name}!</p>
+              </div>
+            )}
             <h1 className="search-h1">Unleash the superpowers of plants</h1>
             <SearchBar
               onSearch={handleSearch}
@@ -125,11 +130,6 @@ function Search() {
         </section>
 
         <section className="suggested">
-          {/* {user ? (
-            <div>Welcome back, {user.user_metadata.display_name}!</div>
-          ) : (
-            <div>Please log in to see your saved plants.</div>
-          )} */}
           <div className="container">
             <div className="indicator-header">
               <Header Tag="h2" className={noResults ? "no-result" : ""}>
