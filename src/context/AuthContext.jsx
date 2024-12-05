@@ -7,66 +7,78 @@ export const AuthContext = createContext({});
 function AuthContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState("pending");
-  // const [userPlants, setUserPlants] = useState([]);
+  const [signUpStatus, setSignUpStatus] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // console.log("supabase auth",supabase.auth);
-    // Get the initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user || null);
+    const fetchSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setUser(session?.user || null); // Set user if session exists
       setStatus("done");
+    };
 
-      if (session && window.location.pathname === "/login") {
-        navigate("/search"); // Redirect logged-in users from the login page to /search
-      }
-    });
+    fetchSession();
 
-    // Set up listener for auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
+      setUser(session?.user || null); // Set user whenever auth state changes
 
-      if (session?.user) {
-        if (window.location.pathname === "/login") {
-          navigate("/search");
-        }
-      } else {
-        const publicRoutes = ["/login", "/register"];
-
-        if (!publicRoutes.includes(window.location.pathname)) {
-          navigate("/search");
-        }
+      // If the user logs in, navigate them to the /search page
+      if (session?.user && window.location.pathname === "/login") {
+        navigate("/search");
+      } else if (
+        !session?.user &&
+        window.location.pathname !== "/login" &&
+        window.location.pathname !== "/register"
+      ) {
+        navigate("/login"); // Redirect to login if no user and not on login/register page
       }
     });
 
-    // Cleanup on unmount
     return () => {
       subscription.unsubscribe();
     };
   }, [navigate]);
 
   const signUp = async (email, password, username) => {
-    const { user, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          display_name: username,
+    try {
+      // Call the Supabase sign-up function
+      const { data, error } = await supabase.auth.signUp(
+        {
+          email,
+          password,
         },
-      },
-    });
-
-    if (error) {
-      console.error("sign-up error:", error);
-      return;
+        {
+          data: { display_name: username },
+        }
+      );
+  
+      if (error) {
+        console.error("Sign-up error:", error.message);
+        setSignUpStatus("error");
+        return { error };
+      }
+  
+      if (data.user) {
+        console.log("Sign-up successful. User:", data.user);
+        setSignUpStatus("email_sent"); // Update status for feedback
+        setUser(null); // User isn't authenticated until verification
+        return { user: data.user, message: "Verification email sent." };
+      } else {
+        console.log("Sign-up initiated. Waiting for email verification.");
+        setSignUpStatus("email_sent");
+        return { message: "Verification email sent, please verify to log in." };
+      }
+    } catch (err) {
+      console.error("Unexpected error during sign-up:", err.message);
+      setSignUpStatus("error");
+      return { error: err.message };
     }
-
-    setUser(user);
-    // navigate("/search");
-    console.log("User signed up successfully:", user);
   };
+  
 
   const login = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -76,16 +88,14 @@ function AuthContextProvider({ children }) {
 
     if (error) {
       console.error("Login error:", error.message);
-
       if (error.message.includes("invalid login credentials")) {
         return { error: "User not found. Please register." };
       }
       return { error: error.message };
     }
-    
 
     setUser(data.user);
-    // navigate("/search");
+    console.log("User logged in successfully:", data.user);
     return { user: data.user };
   };
 
@@ -98,6 +108,7 @@ function AuthContextProvider({ children }) {
   const AuthData = {
     user,
     status,
+    signUpStatus,
     login,
     logout,
     signUp,

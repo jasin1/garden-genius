@@ -3,7 +3,6 @@ import whiteLogo from "../../assets/white-logo.svg";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext.jsx";
-// import axios from "axios";
 import Button from "../../components/Button/Button.jsx";
 import Notification from "../../components/Notification/Notification.jsx";
 import { useContext, useState } from "react";
@@ -14,10 +13,10 @@ function Home() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signUp } = useContext(AuthContext);
+  const { signUp, SignUpStatus } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const [SignUpStatus, setSignUpStatus] = useState(false);
+
 
   async function handleFormSubmit(data) {
     try {
@@ -31,11 +30,10 @@ function Home() {
       if (response.error) {
         setError(response.error.message); // Show error if any
       } else {
-        setSignUpStatus(true); // Redirect to login page after successful signup
         console.log("Signup successful! Verification email sent.");
       }
     } catch (error) {
-      console.error("Registratiefout: ", error.message);
+      console.error("Signup error: ", error.message);
       setError(error.message || "An unexpected error occurred.");
     }
   }
@@ -71,13 +69,13 @@ function Home() {
               <h1 className="intro-welcome-txt">Sign up!</h1>
 
               <p>
-                {SignUpStatus
+                {SignUpStatus == "email_sent"
                   ? "A verification email has been sent to your email address. Please check your inbox and confirm your account to proceed."
                   : "Embark on your green journey with us! Sign up today and discover a world of botanical beauty."}
               </p>
             </div>
 
-            {!SignUpStatus && (
+            {SignUpStatus !== "email_sent" && (
               <div className="form-wrapper">
                 <form onSubmit={handleSubmit(handleFormSubmit)}>
                   <div className="form-container">
@@ -147,8 +145,8 @@ function Home() {
             )}
           </div>
         </div>
-        {error && (
-          <Notification message={error} onClose={handleCloseNotification} />
+        {(error || SignUpStatus === "email_sent") && (
+          <Notification message={error|| "A verification email has been sent. Please check your inbox."} onClose={handleCloseNotification} />
         )}
       </section>
     </main>
