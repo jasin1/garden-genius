@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import Button from "../../components/Button/Button.jsx";
 import Notification from "../../components/Notification/Notification.jsx";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 
 function Home() {
   const {
@@ -13,9 +13,23 @@ function Home() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signUp } = useContext(AuthContext);
+  const { signUp, signUpStatus,setSignUpStatus } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+
+  // Effect to reset signUpStatus after 5 seconds
+  useEffect(() => {
+    if (signUpStatus === "email_sent") {
+      const timer = setTimeout(() => {
+        setSignUpStatus(null);
+      }, 5000);
+
+      // Cleanup timer if component unmounts or state changes
+      return () => clearTimeout(timer);
+    }
+  }, [signUpStatus, setSignUpStatus]);
+
+
 
 
   async function handleFormSubmit(data) {
@@ -23,14 +37,17 @@ function Home() {
       const { email, password, username } = data;
       const response = await signUp(email, password, username);
 
+      console.log("Signup response received:", response);
+
       if (!response) {
         throw new Error("No response from the signup function");
       }
 
       if (response.error) {
+        console.log("Signup error:", response.error.message);
         setError(response.error.message); // Show error if any
       } else {
-        console.log("Signup successful! Verification email sent.");
+        setSignUpStatus("email_sent");  // Set the status to show the success notification
         navigate("/verifyEmail");
       }
     } catch (error) {

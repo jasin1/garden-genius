@@ -1,7 +1,11 @@
 import './Notification.css';
 import Alert from '../../assets/Alert-icon-2.svg';
+import { useEffect } from 'react';
 
 function Notification({message, onClose}) {
+    useEffect(() => {
+        console.log('Notification message:', message);  // Debugging line
+      }, [message]);
     return (
         <div className="notification-overlay" onClick={onClose}>
             <div className="notification">

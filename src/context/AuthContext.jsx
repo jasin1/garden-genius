@@ -45,13 +45,12 @@ function AuthContextProvider({ children }) {
           navigate("/search"); // Redirect to /search if logged in from /login
         }
       } else {
-        if (
-          window.location.pathname !== "/login" &&
-          window.location.pathname !== "/register"
-        ) {
-          navigate("/login"); // Redirect to /login if not authenticated
+        // Allow access to specific routes even if not logged in
+        const publicRoutes = ["/login", "/register", "/verifyEmail"];
+        if (!publicRoutes.includes(window.location.pathname)) {
+            navigate("/login"); // Redirect to login for protected routes
         }
-      }
+    }
     });
 
     // Cleanup function
@@ -82,8 +81,9 @@ function AuthContextProvider({ children }) {
 
       if (data.user) {
         console.log("Sign-up successful. User:", data.user);
+        navigate("/verifyEmail");
         setSignUpStatus("email_sent"); // Update status for feedback
-        return { message: "Verification email sent. Please check your inbox." };
+        // return { message: "Verification email sent. Please check your inbox." };
       }
     } catch (err) {
       console.error("Unexpected error during sign-up:", err.message);
@@ -91,6 +91,13 @@ function AuthContextProvider({ children }) {
       return { error: err.message };
     }
   };
+
+  useEffect(() => {
+    if (signUpStatus === "email_sent") {
+      const timer = setTimeout(() => setSignUpStatus(null), 5000);
+      return () => clearTimeout(timer); // Cleanup the timer on component unmount
+    }
+}, [signUpStatus]);
 
   const login = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -117,10 +124,14 @@ function AuthContextProvider({ children }) {
     navigate("/login");
   };
 
+
+
+
   const AuthData = {
     user,
     status,
     signUpStatus,
+    setSignUpStatus,
     login,
     logout,
     signUp,
