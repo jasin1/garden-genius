@@ -11,66 +11,79 @@ function AuthContextProvider({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setUser(session?.user || null); // Set user if session exists
-      setStatus("done");
+    // Handle session fetching and state initialization
+    const fetchSessionAndInitialize = async () => {
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error("Error fetching session:", error);
+          return;
+        }
+
+        setUser(session?.user || null); // Update user state
+        setStatus("done"); // Mark as initialized
+      } catch (err) {
+        console.error("Unexpected error during session fetch:", err);
+      }
     };
 
-    fetchSession();
+    fetchSessionAndInitialize(); // Initial session fetch
 
+    // Set up onAuthStateChange listener
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null); // Set user whenever auth state changes
+      setUser(session?.user || null); // Update user state
 
-      // If the user logs in, navigate them to the /search page
-      if (session?.user && window.location.pathname === "/login") {
-        navigate("/search");
-      } else if (
-        !session?.user &&
-        window.location.pathname !== "/login" &&
-        window.location.pathname !== "/register"
-      ) {
-        navigate("/login"); // Redirect to login if no user and not on login/register page
+      // Navigation logic based on the user's auth state
+      if (session?.user) {
+        if (window.location.pathname === "/login") {
+          navigate("/search"); // Redirect to /search if logged in from /login
+        }
+      } else {
+        if (
+          window.location.pathname !== "/login" &&
+          window.location.pathname !== "/register"
+        ) {
+          navigate("/login"); // Redirect to /login if not authenticated
+        }
       }
     });
 
+    // Cleanup function
     return () => {
-      subscription.unsubscribe();
+      if (subscription) {
+        subscription.unsubscribe();
+      }
     };
   }, [navigate]);
 
   const signUp = async (email, password, username) => {
     try {
-      // Call the Supabase sign-up function
       const { data, error } = await supabase.auth.signUp(
         {
           email,
           password,
-        },
-        {
-          data: { display_name: username },
-        }
-      );
-  
+          options:{
+            data: { display_name: username },
+            
+          },
+        });
+
       if (error) {
         console.error("Sign-up error:", error.message);
         setSignUpStatus("error");
         return { error };
       }
-  
+
       if (data.user) {
         console.log("Sign-up successful. User:", data.user);
         setSignUpStatus("email_sent"); // Update status for feedback
-        setUser(null); // User isn't authenticated until verification
-        return { user: data.user, message: "Verification email sent." };
-      } else {
-        console.log("Sign-up initiated. Waiting for email verification.");
-        setSignUpStatus("email_sent");
-        return { message: "Verification email sent, please verify to log in." };
+        return { message: "Verification email sent. Please check your inbox." };
       }
     } catch (err) {
       console.error("Unexpected error during sign-up:", err.message);
@@ -78,7 +91,6 @@ function AuthContextProvider({ children }) {
       return { error: err.message };
     }
   };
-  
 
   const login = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({

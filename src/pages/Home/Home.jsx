@@ -13,7 +13,7 @@ function Home() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signUp, SignUpStatus } = useContext(AuthContext);
+  const { signUp } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
@@ -31,6 +31,7 @@ function Home() {
         setError(response.error.message); // Show error if any
       } else {
         console.log("Signup successful! Verification email sent.");
+        navigate("/verifyEmail");
       }
     } catch (error) {
       console.error("Signup error: ", error.message);
@@ -45,6 +46,8 @@ function Home() {
   const handleCloseNotification = () => {
     setError(null);
   };
+
+
 
   return (
     <main>
@@ -69,13 +72,11 @@ function Home() {
               <h1 className="intro-welcome-txt">Sign up!</h1>
 
               <p>
-                {SignUpStatus == "email_sent"
-                  ? "A verification email has been sent to your email address. Please check your inbox and confirm your account to proceed."
-                  : "Embark on your green journey with us! Sign up today and discover a world of botanical beauty."}
+                 Embark on your green journey with us! Sign up today and discover a world of botanical beauty.
               </p>
             </div>
 
-            {SignUpStatus !== "email_sent" && (
+            
               <div className="form-wrapper">
                 <form onSubmit={handleSubmit(handleFormSubmit)}>
                   <div className="form-container">
@@ -142,12 +143,11 @@ function Home() {
                   </div>
                 </form>
               </div>
-            )}
           </div>
         </div>
-        {(error || SignUpStatus === "email_sent") && (
+        
           <Notification message={error|| "A verification email has been sent. Please check your inbox."} onClose={handleCloseNotification} />
-        )}
+        
       </section>
     </main>
   );
