@@ -31,10 +31,11 @@ function AuthContextProvider({ children }) {
         navigate("/search");
       } else if (
         !session?.user &&
-        window.location.pathname !== "/login" &&
-        window.location.pathname !== "/register"
+        !["/login", "/register", "/verifyemail"].includes(
+          window.location.pathname.toLowerCase()
+        )
       ) {
-        navigate("/login"); // Redirect to login if no user and not on login/register page
+        navigate("/login"); // Redirect to login if no user and not on allowed pages
       }
     });
 
@@ -66,6 +67,7 @@ function AuthContextProvider({ children }) {
         console.log("Sign-up successful. User:", data.user);
         setSignUpStatus("email_sent"); // Update status for feedback
         setUser(null); // User isn't authenticated until verification
+        navigate("/VerifyEmail");
         return { user: data.user, message: "Verification email sent." };
       } else {
         console.log("Sign-up initiated. Waiting for email verification.");
