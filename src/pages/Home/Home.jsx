@@ -54,6 +54,8 @@ function Home() {
       console.error("Signup error: ", error.message);
       setError(error.message || "An unexpected error occurred.");
     }
+    
+    console.log(data);
   }
 
   function handleNavigate() {
