@@ -8,6 +8,7 @@ function AuthContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState("pending");
   const [signUpStatus, setSignUpStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +32,7 @@ function AuthContextProvider({ children }) {
         navigate("/search");
       } else if (
         !session?.user &&
-        !["/login", "/register", "/verifyemail"].includes(
+        !["/login", "/register", "/verifyemail", "/search"].includes(
           window.location.pathname.toLowerCase()
         )
       ) {
@@ -44,8 +45,11 @@ function AuthContextProvider({ children }) {
     };
   }, [navigate]);
 
+  //------- Signup ----------//
+
   const signUp = async (email, password, username) => {
     try {
+      setLoading(true);
       // Call the Supabase sign-up function
       const { data, error } = await supabase.auth.signUp(
         {
@@ -53,21 +57,42 @@ function AuthContextProvider({ children }) {
           password,
         },
         {
-          data: { display_name: username },
+          data: { display_name: username }, // Pass username to user metadata
         }
       );
   
       if (error) {
         console.error("Sign-up error:", error.message);
         setSignUpStatus("error");
+        setLoading(false);
         return { error };
       }
   
       if (data.user) {
         console.log("Sign-up successful. User:", data.user);
+        
+        // Get the authenticated user (use the updated method)
+        const { data: user, error: userError } = await supabase.auth.getUser();
+        
+        if (userError) {
+          console.error("Error fetching user:", userError.message);
+        } else {
+          // Here we update the user's profile in the 'users' table with the username
+          const { error: updateError } = await supabase
+            .from('users')
+            .upsert({ display_name: username, id: user.id }) // Upsert (insert or update) user's display_name
+            
+          if (updateError) {
+            console.error("Error updating profile:", updateError.message);
+          } else {
+            console.log("User profile updated successfully.");
+          }
+        }
+  
         setSignUpStatus("email_sent"); // Update status for feedback
         setUser(null); // User isn't authenticated until verification
-        navigate("/VerifyEmail");
+        navigate("/VerifyEmail"); // Navigate to verify email page
+        setLoading(false);
         return { user: data.user, message: "Verification email sent." };
       } else {
         console.log("Sign-up initiated. Waiting for email verification.");
@@ -78,8 +103,12 @@ function AuthContextProvider({ children }) {
       console.error("Unexpected error during sign-up:", err.message);
       setSignUpStatus("error");
       return { error: err.message };
+    }finally{
+      setLoading(false);
     }
   };
+  
+    //------- Login ----------//
   
 
   const login = async (email, password) => {
@@ -101,6 +130,8 @@ function AuthContextProvider({ children }) {
     return { user: data.user };
   };
 
+    //------- Logout ----------//
+
   const logout = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -114,6 +145,7 @@ function AuthContextProvider({ children }) {
     login,
     logout,
     signUp,
+    loading,
   };
 
   return (

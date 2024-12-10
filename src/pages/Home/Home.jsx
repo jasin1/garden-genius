@@ -13,14 +13,15 @@ function Home() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signUp, SignUpStatus } = useContext(AuthContext);
+  const { signUp, SignUpStatus, loading } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-
 
   async function handleFormSubmit(data) {
     try {
       const { email, password, username } = data;
+      // Log the form data to check if username is being passed correctly
+      console.log("Sign-up data: ", { email, password, username });
       const response = await signUp(email, password, username);
 
       if (!response) {
@@ -125,7 +126,7 @@ function Home() {
                     </label>
                     <div className="btn-wrapper">
                       <Button type="submit" variant="alt">
-                        Sign up Now
+                        {loading ? "Processing..." :"Sign up Now"}
                       </Button>
                     </div>
                     <div className="register-wrapper">
@@ -146,7 +147,13 @@ function Home() {
           </div>
         </div>
         {(error || SignUpStatus === "email_sent") && (
-          <Notification message={error|| "A verification email has been sent. Please check your inbox."} onClose={handleCloseNotification} />
+          <Notification
+            message={
+              error ||
+              "A verification email has been sent. Please check your inbox."
+            }
+            onClose={handleCloseNotification}
+          />
         )}
       </section>
     </main>
