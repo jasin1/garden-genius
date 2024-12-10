@@ -50,6 +50,7 @@ function AuthContextProvider({ children }) {
   const signUp = async (email, password, username) => {
     try {
       setLoading(true);
+      
       // Call the Supabase sign-up function
       const { data, error } = await supabase.auth.signUp(
         {
@@ -57,7 +58,7 @@ function AuthContextProvider({ children }) {
           password,
         },
         {
-          data: { display_name: username }, // Pass username to user metadata
+          data: { display_name: username }, // Pass username as metadata
         }
       );
   
@@ -71,28 +72,25 @@ function AuthContextProvider({ children }) {
       if (data.user) {
         console.log("Sign-up successful. User:", data.user);
         
-        // Get the authenticated user (use the updated method)
-        const { data: user, error: userError } = await supabase.auth.getUser();
-        
-        if (userError) {
-          console.error("Error fetching user:", userError.message);
+        // After sign-up, update the 'users' table with the display_name
+        const { error: updateError } = await supabase
+          .from('users')
+          .upsert({
+            display_name: username, // Here you're updating the 'users' table directly
+            id: data.user.id, // Ensure you use the correct user ID
+          });
+  
+        if (updateError) {
+          console.error("Error updating user profile:", updateError.message);
         } else {
-          // Here we update the user's profile in the 'users' table with the username
-          const { error: updateError } = await supabase
-            .from('users')
-            .upsert({ display_name: username, id: user.id }) // Upsert (insert or update) user's display_name
-            
-          if (updateError) {
-            console.error("Error updating profile:", updateError.message);
-          } else {
-            console.log("User profile updated successfully.");
-          }
+          console.log("User profile updated successfully.");
         }
   
-        setSignUpStatus("email_sent"); // Update status for feedback
-        setUser(null); // User isn't authenticated until verification
-        navigate("/VerifyEmail"); // Navigate to verify email page
+        setSignUpStatus("email_sent");
+        setUser(null);
+        navigate("/VerifyEmail");
         setLoading(false);
+  
         return { user: data.user, message: "Verification email sent." };
       } else {
         console.log("Sign-up initiated. Waiting for email verification.");
@@ -103,10 +101,11 @@ function AuthContextProvider({ children }) {
       console.error("Unexpected error during sign-up:", err.message);
       setSignUpStatus("error");
       return { error: err.message };
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
+  
   
     //------- Login ----------//
   
