@@ -19,10 +19,10 @@ function Home() {
 
   async function handleFormSubmit(data) {
     try {
-      const { email, password, username } = data;
+      const { email, password} = data;
       // Log the form data to check if username is being passed correctly
-      console.log("Sign-up data: ", { email, password, username });
-      const response = await signUp(email, password, username);
+      console.log("Sign-up data: ", { email, password});
+      const response = await signUp(email, password);
 
       if (!response) {
         throw new Error("No response from the signup function");
@@ -80,7 +80,7 @@ function Home() {
               <div className="form-wrapper">
                 <form onSubmit={handleSubmit(handleFormSubmit)}>
                   <div className="form-container">
-                    <label htmlFor="name-filed">
+                    {/* <label htmlFor="name-filed">
                       Name
                       <input
                         type="text"
@@ -90,7 +90,7 @@ function Home() {
                           required: "Username is required",
                         })}
                       />
-                    </label>
+                    </label> */}
                     <label htmlFor="email-field">
                       Email
                       <input

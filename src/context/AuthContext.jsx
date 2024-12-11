@@ -47,20 +47,15 @@ function AuthContextProvider({ children }) {
 
   //------- Signup ----------//
 
-  const signUp = async (email, password, username) => {
+  const signUp = async (email, password) => {
     try {
       setLoading(true);
-      
+  
       // Call the Supabase sign-up function
-      const { data, error } = await supabase.auth.signUp(
-        {
-          email,
-          password,
-        },
-        {
-          data: { display_name: username }, // Pass username as metadata
-        }
-      );
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
   
       if (error) {
         console.error("Sign-up error:", error.message);
@@ -71,20 +66,6 @@ function AuthContextProvider({ children }) {
   
       if (data.user) {
         console.log("Sign-up successful. User:", data.user);
-        
-        // After sign-up, update the 'users' table with the display_name
-        const { error: updateError } = await supabase
-          .from('users')
-          .upsert({
-            display_name: username, // Here you're updating the 'users' table directly
-            id: data.user.id, // Ensure you use the correct user ID
-          });
-  
-        if (updateError) {
-          console.error("Error updating user profile:", updateError.message);
-        } else {
-          console.log("User profile updated successfully.");
-        }
   
         setSignUpStatus("email_sent");
         setUser(null);
@@ -105,6 +86,7 @@ function AuthContextProvider({ children }) {
       setLoading(false);
     }
   };
+  
   
   
     //------- Login ----------//
