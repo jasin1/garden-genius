@@ -55,10 +55,10 @@ function AuthContextProvider({ children }) {
         {
           email,
           password,
+          options:{           
+              data: { display_name: username }, // Pass username to user metadata          
+          }
         },
-        {
-          data: { display_name: username }, // Pass username to user metadata
-        }
       );
   
       if (error) {
